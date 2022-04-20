@@ -26,25 +26,23 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
-        elevation: 0.0,
-        title: Text('Sign Up to Music App'),
-        actions: <Widget>[
-          TextButton.icon(
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-            ),
-            icon: Icon(Icons.person),
-            label: Text('Sign In'),
-            onPressed: () {
-              // refer to the widget to toggleForms - ! for null-safe
-              widget.toggleForms!();
-            },
-          )
-        ],
-      ),
+      // prevents background image from moving up when the keyboard opens
+      resizeToAvoidBottomInset: false,
+      // main body of page
       body: Container(
+        // decoration for the body
+        decoration: BoxDecoration(
+          // add a background image
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/images/man-dancing.jpg'), // image from - https://www.freepik.com/free-photo/medium-shot-man-dancing-with-headphones_15365814.htm
+            // cover the whole screen
+            fit: BoxFit.cover,
+            // add a filter to darken the image into the background
+            colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
+          ),
+        ),
+        // add padding to the whole body
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
         // setup a child form for signing in and registering
         child: Form(
@@ -54,10 +52,39 @@ class _RegisterState extends State<Register> {
             children: <Widget>[
               // sized box to space out fields
               SizedBox(
-                height: 20.0,
+                height: 50.0,
               ),
+
+              // Heading text field
+              Text(
+                'Register',
+                textScaleFactor: 3.0,
+              ),
+
+              // sized box to space out fields
+              SizedBox(
+                height: 100.0,
+              ),
+
               // Email form field
               TextFormField(
+                // decoration of field
+                decoration: InputDecoration(
+                  // change the fill color to grey
+                  fillColor: Colors.grey.withOpacity(0.5), filled: true,
+                  // add padding to the content in the field
+                  contentPadding: EdgeInsets.symmetric(vertical: 20),
+                  // set the input border to none to remove the line
+                  border: InputBorder.none,
+                  // add a prefixIcon
+                  prefixIcon: Padding(
+                      // add padding to line up with the text
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      // add the email icon in white
+                      child: Icon(Icons.email, color: Colors.white, size: 25)),
+                  // add hint text saying email to let the user know what to enter
+                  hintText: 'Email',
+                ),
                 // valid form by checking if empty - if empty return string if not empty return null
                 validator: (value) => value!.isEmpty ? 'Enter an Email' : null,
                 // get value in field whenever it is changed
@@ -68,12 +95,31 @@ class _RegisterState extends State<Register> {
                   });
                 },
               ),
+
               // sized box to space out fields
               SizedBox(
-                height: 20.0,
+                height: 30.0,
               ),
+
               // password form field
               TextFormField(
+                // decoration of field
+                decoration: InputDecoration(
+                  // change the fill color to grey
+                  fillColor: Colors.grey.withOpacity(0.5), filled: true,
+                  // add padding to the content in the field
+                  contentPadding: EdgeInsets.symmetric(vertical: 20),
+                  // set the input border to none to remove the line
+                  border: InputBorder.none,
+                  // add a prefixIcon
+                  prefixIcon: Padding(
+                      // add padding to line up with the text
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      // add the email icon in white
+                      child: Icon(Icons.lock, color: Colors.white, size: 25)),
+                  // add hint text saying Password to let the user know what to enter
+                  hintText: 'Password',
+                ),
                 // valid form by checking if password is < 6 - if < 6 return string if 6+ chars return null
                 validator: (value) =>
                     value!.length < 6 ? 'Enter a password 6+ chars long' : null,
@@ -87,42 +133,76 @@ class _RegisterState extends State<Register> {
                   });
                 },
               ),
+
               // sized box to space out fields
               SizedBox(
-                height: 20.0,
+                height: 100.0,
               ),
-              // create an elevated button to register user to firebase
-              ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(primary: Colors.deepPurpleAccent),
-                child: Text(
-                  'Register',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  // check if form is valid based on current state - true / false - ! for null-safe
-                  if (_key.currentState!.validate()) {
-                    // dyanmic as we don't know if null or not - await and registerUser using email and password saved in state
-                    dynamic userResult =
-                        await _auth.registerUser(email, password);
-                    // check if result is null
-                    if (userResult == null) {
-                      // this error is caught by firebase itself when it looks at the email - i.e. test is not valid so it won't work where as test@test.com is valid
-                      // we also do not need an else statement as the stream we set up is always listening and knows when it is valid and automatically takes us through
-                      // if userResult is null set state of error to error message
-                      setState(() {
-                        error = 'Please supply a valid email';
-                      });
-                    }
-                  }
-                },
-              ),
-              // sized box to space out fields
-              SizedBox(height: 12.0),
+
               // text widget to display error message for invalid email from firebase
               Text(
                 error,
                 style: TextStyle(color: Colors.red, fontSize: 12.0),
+              ),
+
+              // create an elevated button to register user to firebase
+              Container(
+                width: 150,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.deepPurpleAccent),
+                  child: Text(
+                    'Register',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    // check if form is valid based on current state - true / false - ! for null-safe
+                    if (_key.currentState!.validate()) {
+                      // dyanmic as we don't know if null or not - await and registerUser using email and password saved in state
+                      dynamic userResult =
+                          await _auth.registerUser(email, password);
+                      // check if result is null
+                      if (userResult == null) {
+                        // this error is caught by firebase itself when it looks at the email - i.e. test is not valid so it won't work where as test@test.com is valid
+                        // we also do not need an else statement as the stream we set up is always listening and knows when it is valid and automatically takes us through
+                        // if userResult is null set state of error to error message
+                        setState(() {
+                          error = 'Please supply a valid email';
+                        });
+                      }
+                    }
+                  },
+                ),
+              ),
+
+              // sized box to space out fields
+              SizedBox(
+                height: 30.0,
+              ),
+
+              // OR text field
+              Text(
+                'OR',
+                textScaleFactor: 1.0,
+              ),
+
+              SizedBox(
+                height: 20.0,
+              ),
+
+              // log in container
+              Container(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 14),
+                    primary: Colors.white,
+                  ),
+                  onPressed: () {
+                    // refer to the widget to toggleForms - ! for null-safe
+                    widget.toggleForms!();
+                  },
+                  child: const Text('Already have an account?'),
+                ),
               ),
             ],
           ),
