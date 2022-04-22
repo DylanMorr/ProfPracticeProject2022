@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project_2022/services/authenticate.dart';
+import 'package:flutter_project_2022/pages/verifyEmail.dart';
 
 class Register extends StatefulWidget {
   // ? needed after function for null-safe
@@ -149,30 +150,33 @@ class _RegisterState extends State<Register> {
               Container(
                 width: 150,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.deepPurpleAccent),
-                  child: Text(
-                    'Register',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () async {
-                    // check if form is valid based on current state - true / false - ! for null-safe
-                    if (_key.currentState!.validate()) {
-                      // dyanmic as we don't know if null or not - await and registerUser using email and password saved in state
-                      dynamic userResult =
-                          await _auth.registerUser(email, password);
-                      // check if result is null
-                      if (userResult == null) {
-                        // this error is caught by firebase itself when it looks at the email - i.e. test is not valid so it won't work where as test@test.com is valid
-                        // we also do not need an else statement as the stream we set up is always listening and knows when it is valid and automatically takes us through
-                        // if userResult is null set state of error to error message
-                        setState(() {
-                          error = 'Please supply a valid email';
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.deepPurpleAccent),
+                    child: Text(
+                      'Register',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      // check if form is valid based on current state - true / false - ! for null-safe
+                      if (_key.currentState!.validate()) {
+                        // dyanmic as we don't know if null or not - await and registerUser using email and password saved in state
+                        dynamic userResult =
+                            await _auth.registerUser(email, password).then((_) {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => VerifyEmail()));
                         });
+                        // check if result is null
+                        if (userResult == null) {
+                          // this error is caught by firebase itself when it looks at the email - i.e. test is not valid so it won't work where as test@test.com is valid
+                          // we also do not need an else statement as the stream we set up is always listening and knows when it is valid and automatically takes us through
+                          // if userResult is null set state of error to error message
+                          setState(() {
+                            error = 'Please supply a valid email';
+                          });
+                        }
                       }
-                    }
-                  },
-                ),
+                    }),
               ),
 
               // sized box to space out fields
