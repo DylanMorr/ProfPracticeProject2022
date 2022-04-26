@@ -26,8 +26,37 @@ class _LibraryPageState extends State<LibraryPage> {
           ),
         ],
       ),
-      body: new Center(
-        child: new Text("This is the Library page"),
+      body: ListView(
+        children: const <Widget>[
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('Liked'),
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('Pop'),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('Metal'),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('Irish Trad'),
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('Dance Hits'),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('2000s Hits'),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text(''),
+          ),
+        ],
       ),
     );
   }
