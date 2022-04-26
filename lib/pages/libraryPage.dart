@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LibraryPage extends StatefulWidget {
-  const LibraryPage({ Key? key }) : super(key: key);
+  const LibraryPage({Key? key}) : super(key: key);
 
   @override
   State<LibraryPage> createState() => _LibraryPageState();
@@ -12,10 +12,39 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Library Page"),
+        title: new Text("Your Library"),
       ),
-      body: new Center(
-        child: new Text("This is the Library page"),
+      body: ListView(
+        children: const <Widget>[
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('Liked'),
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('Pop'),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('Metal'),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('Irish Trad'),
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('Dance Hits'),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text('2000s Hits'),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text(''),
+          ),
+        ],
       ),
     );
   }
