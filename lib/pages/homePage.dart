@@ -70,13 +70,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Home Page"),
-      ),
-      body: new Center(
-        child: new Text("This is the home page"),
-      ),
-    );
   }
 }

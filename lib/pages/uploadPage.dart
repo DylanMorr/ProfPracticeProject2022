@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_project_2022/api/api-firebase.dart';
-import 'package:path/path.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project_2022/services/crud.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as Path;
 
 class UploadPage extends StatefulWidget {
   const UploadPage({Key? key}) : super(key: key);
@@ -13,74 +13,19 @@ class UploadPage extends StatefulWidget {
 }
 
 class _UploadPageState extends State<UploadPage> {
-  // Create a file variable
+  // Helped work out uploading with this playlist of videos - https://www.youtube.com/playlist?list=PLBxWkM8PLHcpNxRIq2SZBt1WoJCUBCIiX
+
+  // strings to hold
+  late String artistName, songName, imgLink;
+
+  // file variable
   File? file;
-  // create a upload task variable
-  UploadTask? uploadTask;
+  // boolean to check if the upload button has been pressed to start loading the page
+  bool _isLoading = false;
+  // crudMethods object reference
+  CrudAction crudMethods = new CrudAction();
 
-  @override
-  Widget build(BuildContext context) {
-    // variable to store the fileName with default being No File Selected
-    final fileName = file != null ? basename(file!.path) : 'No File Selected';
-
-    return Scaffold(
-      appBar: AppBar(
-        title: new Text("Upload Songs"),
-      ),
-      body: Container(
-        child: Center(
-          child: Column(
-            children: [
-              // sized box to space out fields
-              SizedBox(
-                height: 220.0,
-              ),
-              // create button for selecting song
-              OutlinedButton.icon(
-                label: Text('Select Song'),
-                onPressed: () {
-                  // call Selectsong method
-                  SelectSong();
-                },
-                icon: Icon(Icons.attach_file),
-              ),
-              // sized box to space out fields
-              SizedBox(
-                height: 10.0,
-              ),
-              // text field to show filename on screen when selected
-              Text(
-                fileName,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
-              // sized box to space out fields
-              SizedBox(
-                height: 70.0,
-              ),
-              // create button for uploading song
-              OutlinedButton.icon(
-                label: Text('Upload Song'),
-                onPressed: () {
-                  // call UploadSong method
-                  UploadSong();
-                },
-                icon: Icon(Icons.cloud_upload),
-              ),
-              // sized box to space out fields
-              SizedBox(
-                height: 10.0,
-              ),
-              // show upload status when it is not null
-              uploadTask != null ? buildUploadStatus(uploadTask!) : Container(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // coded with the help of this video on selecting and uploading files
-  // https://www.youtube.com/watch?v=dmZ9Tg9k13U&list=LL&index=9&t=437s&ab_channel=JohannesMilke
+  // method to select a song
   Future SelectSong() async {
     // set the filePicker result to only allow one file
     final fileResult =
@@ -95,56 +40,159 @@ class _UploadPageState extends State<UploadPage> {
     setState(() => file = File(filePath));
   }
 
-  Future UploadSong() async {
-    // check if file is null and return if it is
-    if (file == null) return;
+  // method to upload everything to firebase
+  finalUpload(BuildContext context) async {
+    // check if file is not equal to null
+    if (file != null) {
+      // set the state of is loading to true
+      setState(() {
+        _isLoading = true;
+      });
 
-    // set the songName
-    final songName = basename(file!.path);
-    // destination to be stored in firebase
-    final destination = 'songs/$songName';
+      // set the songTitle to the basename of the path / files actual name
+      final songTitle = Path.basename(file!.path);
 
-    // upload the song using the api uploadtask
-    uploadTask = FirebaseApi.Upload(destination, file!);
+      // create a reference instance to the storage system on firebase
+      FirebaseStorage storage = FirebaseStorage.instance;
+      // set the reference to a folder called songs and have the songs called their title
+      Reference ref = storage.ref().child("songs").child("$songTitle");
 
-    // call set state so that ui gets reloaded and new task is received
-    setState(() {});
+      // create an upload task to put the file into the reference location
+      final UploadTask uploadTask = ref.putFile(file!);
 
-    // check if upload task is null
-    if (uploadTask == null) return;
+      // get the download url of the file back
+      var downloadUrl = await (await uploadTask).ref.getDownloadURL();
+      // output the url
+      print("this is url $downloadUrl");
 
-    // return a snapshot when the download is complete
-    final snapShot = await uploadTask!.whenComplete(() => {});
-    // get the download link using the snapshot reference
-    final downloadLink = await snapShot.ref.getDownloadURL();
-    // print out download link
-    print('Download Link: $downloadLink');
+      // create a Map of strings to hold all the songs data
+      Map<String, String> songMap = {
+        "song_Url": downloadUrl,
+        "artist_Name": artistName,
+        "song_name": songName,
+        "img_link": imgLink,
+      };
+
+      // call the crudMethods object and add the map data
+      crudMethods.addData(songMap).then((result) {
+        // once added navigate to library page
+        Navigator.pop(context);
+      });
+    } else {}
   }
 
-  // create a method to track upload status using a streambuilder
-  Widget buildUploadStatus(UploadTask uploadTask) => StreamBuilder<
-          TaskSnapshot>(
-      // in this stream builder we can listen to the changes of the upload task
-      stream: uploadTask.snapshotEvents,
-      // implement builder method
-      builder: (context, snapShot) {
-        // check if snapshot has any data
-        if (snapShot.hasData) {
-          // get the data from the snapshot
-          final shot = snapShot.data!;
-          // set the progress to bytes uploaded / total bytes
-          final uploadProgress = shot.bytesTransferred / shot.totalBytes;
-          // change progress to show as a percentage and set it to string as fixed with 2 numbers after point
-          final uploadPercent = (uploadProgress * 100).toStringAsFixed(2);
+  @override
+  Widget build(BuildContext context) {
+    // variable to store the fileName with default being No File Selected
+    final fileName =
+        file != null ? Path.basename(file!.path) : 'No Song Selected';
 
-          // display the progress in the ui
-          return Text(
-            '$uploadPercent %',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          );
-        } else {
-          // if no data return a container
-          return Container();
-        }
-      });
+    return Scaffold(
+      appBar: AppBar(
+        title: new Text("Upload Songs"),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+      ),
+      // check if the body is loading
+      body: _isLoading
+          // if true return a containter with a circular progress indicator in the center
+          ? Container(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            )
+          // if false return main form container
+          : Container(
+              child: Center(
+                child: Column(
+                  children: [
+                    // sized box to space out fields
+                    SizedBox(
+                      height: 40.0,
+                    ),
+
+                    // text fields container
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: <Widget>[
+                          // Artist name field
+                          TextField(
+                            // add hint text
+                            decoration:
+                                InputDecoration(hintText: "Artist Name"),
+                            // on changed set the artistName = value of the field
+                            onChanged: (val) {
+                              artistName = val;
+                            },
+                          ),
+                          // song name field
+                          TextField(
+                            // add hint text
+                            decoration: InputDecoration(hintText: "Song Name"),
+                            // on changed set the songName = value of the field
+                            onChanged: (val) {
+                              songName = val;
+                            },
+                          ),
+                          // Image link field
+                          TextField(
+                            // add hint text
+                            decoration:
+                                InputDecoration(hintText: "Link to Image"),
+                            // on changed set the imgLink = value of the field
+                            onChanged: (val) {
+                              imgLink = val;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // sized box to space out fields
+                    SizedBox(
+                      height: 40.0,
+                    ),
+
+                    // create button for selecting song
+                    OutlinedButton.icon(
+                      label: Text('Select Song'),
+                      onPressed: () {
+                        // call Selectsong method
+                        SelectSong();
+                      },
+                      icon: Icon(Icons.attach_file),
+                    ),
+                    // sized box to space out fields
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    // text field to show filename on screen when selected
+                    Text(
+                      fileName,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+
+                    // sized box to space out fields
+                    SizedBox(
+                      height: 70.0,
+                    ),
+
+                    // create button for uploading song
+                    OutlinedButton.icon(
+                      label: Text('Upload Song'),
+                      // when pressed call the finalUpload method
+                      onPressed: () => finalUpload(context),
+                      icon: Icon(Icons.cloud_upload),
+                    ),
+                    // sized box to space out fields
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
 }
