@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project_2022/models/userModel.dart';
 import 'package:flutter_project_2022/pages/homePage.dart';
 import 'package:flutter_project_2022/pages/libraryPage.dart';
-import 'package:flutter_project_2022/pages/searchPage.dart';
+import 'package:flutter_project_2022/pages/songsPage.dart';
 import 'package:flutter_project_2022/pages/settingsPage.dart';
 import 'package:flutter_project_2022/pages/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -53,7 +53,7 @@ class _BotNavBarState extends State<BotNavBar> {
   int _selectedIndex = 0;
   final List<Widget> index = [
     HomePage(),
-    SearchPage(),
+    SongsPage(),
     LibraryPage(),
     SettingsPage(),
   ];
@@ -85,8 +85,8 @@ class _BotNavBarState extends State<BotNavBar> {
           // seach bar item
           BottomNavigationBarItem(
             // add the icon a label and change the color
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.album),
+            label: 'All Songs',
             backgroundColor: Colors.deepPurpleAccent,
           ),
 
