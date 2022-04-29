@@ -1,16 +1,70 @@
-# flutter_project_2022
+# Flutter Music Player
 
-A new Flutter project.
+This project is a music player app that utilises firebase to store the user authenication and the song details.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Authors
 
-A few resources to get you started if this is your first Flutter project:
+- [@DylanMorr](https://github.com/DylanMorr)
+- [@CiaranGavigan](https://github.com/CiaranGavigan)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tech Stack
+
+**Client:** Flutter
+
+**Server:** Google Firebase
+
+
+## Features
+
+- Dark mode app
+- Full email verification and logging in 
+- Audio Player 
+- Songs uploadable from local storage
+
+
+## Roadmap
+
+- Get audio player properly up and running
+
+- Touch up the main pages to make them look better
+
+- Add pre built playlists in 
+
+
+## Tech Installation
+
+Link to get started downloading Flutter
+- https://docs.flutter.dev/get-started/install?gclid=EAIaIQobChMI0pjPnai59wIVy7HtCh0wQwk6EAAYASAAEgIaj_D_BwE&gclsrc=aw.ds
+
+Link to download Android Studio for emulator
+- https://developer.android.com/studio
+
+Link to VS Code download
+- https://code.visualstudio.com/download
+
+Highly recommend this guide if you have any problems installing
+- https://www.youtube.com/watch?v=ly0hAtV7EBg
+## Deployment
+
+To deploy this project run
+
+```bash
+  flutter clean
+  flutter pub get
+  flutter build apk
+```
+
+
+## Demo
+
+Insert Link
+
+
+## Acknowledgements
+
+ - [Brilliant Beginner Project to follow](https://www.youtube.com/playlist?list=PL4cUxeGkcC9j--TKIdkb3ISfRbJeJYQwC)
+ - [Flutter Documentation](https://docs.flutter.dev/)
+ - [Firebase Documentation](https://firebase.google.com/docs/guides)
+
