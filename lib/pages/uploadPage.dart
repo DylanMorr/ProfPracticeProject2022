@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project_2022/services/crud.dart';
 import 'package:file_picker/file_picker.dart';
@@ -51,11 +52,14 @@ class _UploadPageState extends State<UploadPage> {
 
       // set the songTitle to the basename of the path / files actual name
       final songTitle = Path.basename(file!.path);
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User? user = auth.currentUser;
+      final uid = user?.uid;
 
       // create a reference instance to the storage system on firebase
       FirebaseStorage storage = FirebaseStorage.instance;
       // set the reference to a folder called songs and have the songs called their title
-      Reference ref = storage.ref().child("songs").child("$songTitle");
+      Reference ref = storage.ref().child("songs").child(uid!).child("$songTitle");
 
       // create an upload task to put the file into the reference location
       final UploadTask uploadTask = ref.putFile(file!);
@@ -67,8 +71,8 @@ class _UploadPageState extends State<UploadPage> {
 
       // create a Map of strings to hold all the songs data
       Map<String, String> songMap = {
-        "song_Url": downloadUrl,
-        "artist_Name": artistName,
+        "song_url": downloadUrl,
+        "artist_name": artistName,
         "song_name": songName,
         "img_link": imgLink,
       };
