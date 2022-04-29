@@ -62,3 +62,32 @@ class _SongsPageState extends State<SongsPage> {
 }
 
 
+        itemCount: dataList.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: InkWell(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Player(
+                          title: dataList[index]["song_name"].toString(),
+                          artist: dataList[index]["artist_name"].toString(),
+                          url: dataList[index]["song_url"].toString(),
+                          image: dataList[index]["image_url"].toString()))),
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  dataList[index]["song_name"].toString() +
+                      " - " +
+                      dataList[index]["artist_name"].toString(),
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ),
+            elevation: 10.0,
+          );
+        },
+      );
+}
