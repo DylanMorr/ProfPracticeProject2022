@@ -19,23 +19,20 @@ class _SettingsPageState extends State<SettingsPage> {
         title: new Text("Settings Page"),
         backgroundColor: Colors.deepPurpleAccent,
         elevation: 0.0,
-        // set up signout text button on appBar
-        actions: <Widget>[
-          TextButton.icon(
-            style: TextButton.styleFrom(
-              primary: Colors.white,
+      ),
+      body: new Center(
+        // add an elevated button to log out
+        child: new ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.deepPurpleAccent,
             ),
             icon: Icon(Icons.person),
-            label: Text('logout'),
+            label: Text('Log Out'),
             onPressed: () async {
               // use instance of authenticate method to log out
               await _auth.logOut();
             },
-          )
-        ],
-      ),
-      body: new Center(
-        child: new Text("This is the Settings page"),
+          ),
       ),
     );
   }

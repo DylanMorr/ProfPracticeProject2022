@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project_2022/pages/uploadPage.dart';
+import 'package:flutter_project_2022/pages/main_pages/songsPage.dart';
+import 'package:flutter_project_2022/pages/secondary_pages/rockHitsPage.dart';
+import 'package:flutter_project_2022/pages/secondary_pages/uploadPage.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({Key? key}) : super(key: key);
@@ -14,9 +16,13 @@ class _LibraryPageState extends State<LibraryPage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Library Page"),
+        backgroundColor: Colors.deepPurpleAccent,
         actions: <Widget>[
           // add a button to upload songs
           TextButton(
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+            ),
             onPressed: () {
               // navigate to uploadSong page
               Navigator.of(context)
@@ -27,7 +33,7 @@ class _LibraryPageState extends State<LibraryPage> {
         ],
       ),
       body: ListView(
-        children: const <Widget>[
+        children: <Widget>[
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text('Liked'),
@@ -38,7 +44,10 @@ class _LibraryPageState extends State<LibraryPage> {
           ),
           ListTile(
             leading: Icon(Icons.favorite),
-            title: Text('Metal'),
+            title: Text('Rock Hits'),
+            onTap: () { // navigate to Songs page
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => RockPage()));},
           ),
           ListTile(
             leading: Icon(Icons.favorite),
@@ -54,7 +63,10 @@ class _LibraryPageState extends State<LibraryPage> {
           ),
           ListTile(
             leading: Icon(Icons.favorite),
-            title: Text(''),
+            title: Text('All Songs'),
+            onTap: () { // navigate to Songs page
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => SongsPage()));},
           ),
         ],
       ),
