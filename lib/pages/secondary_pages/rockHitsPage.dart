@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project_2022/pages/databaseManager.dart';
-import 'package:flutter_project_2022/pages/player.dart';
+import 'package:flutter_project_2022/api/databaseManager.dart';
+import 'package:flutter_project_2022/pages/secondary_pages/player.dart';
 
-class SongsPage extends StatefulWidget {
-  const SongsPage({Key? key}) : super(key: key);
+class RockPage extends StatefulWidget {
+  const RockPage({Key? key}) : super(key: key);
 
   @override
-  State<SongsPage> createState() => _SongsPageState();
+  State<RockPage> createState() => _RockPageState();
 }
 
-class _SongsPageState extends State<SongsPage> {
+class _RockPageState extends State<RockPage> {
   List dataList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Songs"),
+        title: const Text("Rock Hits"),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: FutureBuilder(
-        future: FireStoreDataBase().getData(),
+        future: FireStoreDataBase().getRockHits(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Text("Something went wrong");
@@ -38,8 +39,11 @@ class _SongsPageState extends State<SongsPage> {
   Widget buildItems(dataList) => ListView.builder(
         itemCount: dataList.length,
         itemBuilder: (context, index) {
+          // return a card
           return Card(
+            // create an inkwell
             child: InkWell(
+              // when you pick a song navigate to the player and pass down the details
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(

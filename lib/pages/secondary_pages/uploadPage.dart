@@ -94,7 +94,7 @@ class _UploadPageState extends State<UploadPage> {
     return Scaffold(
       appBar: AppBar(
         title: new Text("Upload Songs"),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.deepPurpleAccent,
         elevation: 0.0,
       ),
       // check if the body is loading

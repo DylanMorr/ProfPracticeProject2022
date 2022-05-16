@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project_2022/services/authenticate.dart';
-import 'package:flutter_project_2022/pages/verifyEmail.dart';
+import 'package:flutter_project_2022/pages/secondary_pages/verifyEmail.dart';
 
 class Register extends StatefulWidget {
   // ? needed after function for null-safe

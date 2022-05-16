@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project_2022/pages/authentication.dart';
-import 'package:flutter_project_2022/pages/wrapper.dart';
+import 'package:flutter_project_2022/pages/secondary_pages/authentication.dart';
+import 'package:flutter_project_2022/pages/secondary_pages/wrapper.dart';
 
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({Key? key}) : super(key: key);

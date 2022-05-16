@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project_2022/pages/registerPage.dart';
-import 'package:flutter_project_2022/pages/signInPage.dart';
+import 'package:flutter_project_2022/pages/secondary_pages/registerPage.dart';
+import 'package:flutter_project_2022/pages/secondary_pages/signInPage.dart';
 
 class Authentication extends StatefulWidget {
   const Authentication({Key? key}) : super(key: key);
